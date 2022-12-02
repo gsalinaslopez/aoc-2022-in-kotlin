@@ -23,61 +23,52 @@ val resultsMap = mapOf(
 )
 
 fun main() {
-    fun part1(input: List<String>): Int {
-        var score = 0
-        input.forEach {
-            val move = it.split(" ")
-            val opMove = modesMap[move.first()]!!
-            val myMove = modesMap[move.last()]!!
+    fun part1(input: List<String>): Int = input.sumOf {
+        val move = it.split(" ")
+        val opMove = modesMap[move.first()]!!
+        val myMove = modesMap[move.last()]!!
 
-            score += myMove.points + when (myMove) {
-                Moves.ROCK -> when (opMove) {
-                    Moves.ROCK -> Results.DRAW.points
-                    Moves.PAPER -> Results.LOSE.points
-                    Moves.SCISSORS -> Results.WIN.points
-                }
-                Moves.PAPER -> when (opMove) {
-                    Moves.ROCK -> Results.WIN.points
-                    Moves.PAPER -> Results.DRAW.points
-                    Moves.SCISSORS -> Results.LOSE.points
-                }
-                Moves.SCISSORS -> when (opMove) {
-                    Moves.ROCK -> Results.LOSE.points
-                    Moves.PAPER -> Results.WIN.points
-                    Moves.SCISSORS -> Results.DRAW.points
-                }
+        myMove.points + when (myMove) {
+            Moves.ROCK -> when (opMove) {
+                Moves.ROCK -> Results.DRAW.points
+                Moves.PAPER -> Results.LOSE.points
+                Moves.SCISSORS -> Results.WIN.points
+            }
+            Moves.PAPER -> when (opMove) {
+                Moves.ROCK -> Results.WIN.points
+                Moves.PAPER -> Results.DRAW.points
+                Moves.SCISSORS -> Results.LOSE.points
+            }
+            Moves.SCISSORS -> when (opMove) {
+                Moves.ROCK -> Results.LOSE.points
+                Moves.PAPER -> Results.WIN.points
+                Moves.SCISSORS -> Results.DRAW.points
             }
         }
-
-        return score
     }
 
-    fun part2(input: List<String>): Int {
-        var score = 0
-        input.forEach {
-            val move = it.split(" ")
-            val opMove = modesMap[move.first()]!!
-            val result = resultsMap[move.last()]!!
-            score += result.points + when (opMove) {
-                Moves.ROCK -> when (result) {
-                    Results.WIN -> Moves.PAPER.points
-                    Results.DRAW -> Moves.ROCK.points
-                    Results.LOSE -> Moves.SCISSORS.points
-                }
-                Moves.PAPER -> when (result) {
-                    Results.WIN -> Moves.SCISSORS.points
-                    Results.DRAW -> Moves.PAPER.points
-                    Results.LOSE -> Moves.ROCK.points
-                }
-                Moves.SCISSORS -> when (result) {
-                    Results.WIN -> Moves.ROCK.points
-                    Results.DRAW -> Moves.SCISSORS.points
-                    Results.LOSE -> Moves.PAPER.points
-                }
+    fun part2(input: List<String>): Int = input.sumOf {
+        val move = it.split(" ")
+        val opMove = modesMap[move.first()]!!
+        val result = resultsMap[move.last()]!!
+
+        result.points + when (opMove) {
+            Moves.ROCK -> when (result) {
+                Results.WIN -> Moves.PAPER.points
+                Results.DRAW -> Moves.ROCK.points
+                Results.LOSE -> Moves.SCISSORS.points
+            }
+            Moves.PAPER -> when (result) {
+                Results.WIN -> Moves.SCISSORS.points
+                Results.DRAW -> Moves.PAPER.points
+                Results.LOSE -> Moves.ROCK.points
+            }
+            Moves.SCISSORS -> when (result) {
+                Results.WIN -> Moves.ROCK.points
+                Results.DRAW -> Moves.SCISSORS.points
+                Results.LOSE -> Moves.PAPER.points
             }
         }
-
-        return score
     }
 
     // test if implementation meets criteria from the description, like:
