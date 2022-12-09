@@ -102,10 +102,10 @@ fun main() {
         return visited.size
     }
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day07_test")
-    //println(part1(testInput, 1))
-    //check(part1(testInput, 1) == 13)
-    //println(part1(testInput, 9))
+    var testInput = readInput("Day07_test")
+    check(part1(testInput, 1) == 13)
+    testInput = readInput("Day07_test2")
+    check(part1(testInput, 9) == 36)
 
     val input = readInput("Day07")
     //println(part1(input, 1))
