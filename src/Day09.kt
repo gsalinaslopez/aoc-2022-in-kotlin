@@ -24,39 +24,39 @@ fun main() {
             tail[0] + diff.xDiff != head[0] || tail[1] + diff.yDiff != head[1]
         }
 
-        if (shouldMove) {
-            if (head[0] == tail[0]) {
-                // tail and head on the same col
-                if (head[1] > tail[1]) {
-                    tail[1]++
-                } else {
-                    tail[1]--
-                }
-            } else if (head[1] == tail[1]) {
-                // tail and head on the same row
-                if (head[0] > tail[0]) {
-                    tail[0]++
-                } else {
-                    tail[0]--
-                }
+        if (!shouldMove) return visited
+
+        if (head[0] == tail[0]) {
+            // tail and head on the same col
+            if (head[1] > tail[1]) {
+                tail[1]++
             } else {
-                // forced to move diagonally
-                val diagonalPositions = Direction.values().filter {
-                    it != Direction.C && it != Direction.R && it != Direction.L && it != Direction.U && it != Direction.D
-                }.map { diff ->
-                    intArrayOf(tail[0] + diff.xDiff, tail[1] + diff.yDiff)
-                }.minBy {
-                    distance(it[0], head[0], it[1], head[1])
-                }
-                tail[0] = diagonalPositions[0]
-                tail[1] = diagonalPositions[1]
+                tail[1]--
             }
-            visited.add(Pair(tail[0], tail[1]))
+        } else if (head[1] == tail[1]) {
+            // tail and head on the same row
+            if (head[0] > tail[0]) {
+                tail[0]++
+            } else {
+                tail[0]--
+            }
+        } else {
+            // forced to move diagonally
+            val diagonalPositions = Direction.values().filter {
+                it != Direction.C && it != Direction.R && it != Direction.L && it != Direction.U && it != Direction.D
+            }.map { diff ->
+                intArrayOf(tail[0] + diff.xDiff, tail[1] + diff.yDiff)
+            }.minBy {
+                distance(it[0], head[0], it[1], head[1])
+            }
+            tail[0] = diagonalPositions[0]
+            tail[1] = diagonalPositions[1]
         }
+        visited.add(Pair(tail[0], tail[1]))
         return visited
     }
 
-    fun part1(input: List<String>, numOfTails: Int): Int {
+    fun simulateRope(input: List<String>, numOfTails: Int): Int {
         val visited = mutableSetOf(Pair(0, 0))
         val nodes = Array(numOfTails + 1) { intArrayOf(0, 0) }
 
@@ -76,15 +76,16 @@ fun main() {
         }
         return visited.size
     }
-    // test if implementation meets criteria from the description, like:
-    var testInput = readInput("Day07_test")
-    check(part1(testInput, 1) == 13)
-    testInput = readInput("Day07_test2")
-    check(part1(testInput, 9) == 36)
 
-    val input = readInput("Day07")
-    check(part1(input, 1) == 6256)
-    check(part1(input, 9) == 2665)
+    // test if implementation meets criteria from the description, like:
+    var testInput = readInput("Day09_test")
+    check(simulateRope(testInput, 1) == 13)
+    testInput = readInput("Day09_test2")
+    check(simulateRope(testInput, 9) == 36)
+
+    val input = readInput("Day09")
+    println(simulateRope(input, 1))
+    println(simulateRope(input, 9))
 }
 
 
