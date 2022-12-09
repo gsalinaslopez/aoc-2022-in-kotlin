@@ -12,12 +12,12 @@ fun main() {
     fun distance(x1: Int, x2: Int, y1: Int, y2: Int) =
         sqrt((x2 - x1).toDouble().pow(2) + (y2 - y1).toDouble().pow(2))
 
-    fun moveHead(head: IntArray, direction: Direction, steps: Int) {
+    fun moveHead(head: IntArray, direction: Direction) {
         println("======================================")
-        println("$direction, $steps")
+        println("$direction")
 
-        head[0] = head[0] + (direction.xDiff * steps)
-        head[1] = head[1] + (direction.yDiff * steps)
+        head[0] = head[0] + direction.xDiff
+        head[1] = head[1] + direction.yDiff
     }
 
     fun tailFollow(tail: IntArray, head: IntArray, direction: Direction): Set<Pair<Int, Int>> {
@@ -88,7 +88,7 @@ fun main() {
             val steps = entry[1].toInt()
 
             repeat(steps) {
-                moveHead(nodes.last(), direction, 1)
+                moveHead(nodes.last(), direction)
                 //println("Ended in: ${head.contentToString()}, tail at ${tail.contentToString()}")
                 for (i in nodes.size - 2 downTo 0) {
                     val moves = tailFollow(nodes[i], nodes[i + 1], direction)
@@ -111,7 +111,7 @@ fun main() {
     val input = readInput("Day07")
     //println(part1(input, 1))
     check(part1(input, 1) == 6256)
-    println(part1(input, 9))
+    check(part1(input, 9) == 2665)
     /*
     check(part2(buildTreeGrid(testInput)) == 8)
 
