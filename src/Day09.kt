@@ -1,3 +1,4 @@
+import java.util.*
 import kotlin.math.abs
 
 enum class Direction(val xDiff: Int, val yDiff: Int) {
@@ -7,63 +8,56 @@ enum class Direction(val xDiff: Int, val yDiff: Int) {
 }
 
 fun main() {
+    fun moveHead(head: IntArray, direction: Direction, steps: Int) {
+
+        println("======================================")
+        println("$direction, $steps")
+
+        head[0] = head[0] + (direction.xDiff * steps)
+        head[1] = head[1] + (direction.yDiff * steps)
+    }
+
     fun part1(input: List<String>): Int {
         val visited = mutableSetOf(Pair(0, 0))
-        var headPosition = Pair(0, 0)
-        var tailPosition = Pair(0, 0)
+        val head = intArrayOf(0, 0)
+        val tail = intArrayOf(0, 0)
 
         input.map { it.split(" ") }.forEach { entry ->
             val direction = Direction.valueOf(entry[0])
             val steps = entry[1].toInt()
-            println("======================================")
-            println("$direction, $steps")
+            moveHead(head, direction, steps)
 
-            headPosition = Pair(
-                headPosition.first + (direction.xDiff * steps),
-                headPosition.second + (direction.yDiff * steps)
-            )
-
-            println("Ended in: $headPosition, tail at $tailPosition")
+            println("Ended in: ${head.contentToString()}, tail at ${tail.contentToString()}")
 
             // shouldn't move if its in the immediate vicinity
             val shouldMove = Direction.values().all { diff ->
-                Pair(
-                    tailPosition.first + diff.xDiff,
-                    tailPosition.second + diff.yDiff
-                ) != headPosition
+                //println("${tail[0] + diff.xDiff} != ${head[0]} && ${tail[1] + diff.yDiff} != ${head[1]}")
+                tail[0] + diff.xDiff != head[0] || tail[1] + diff.yDiff != head[1]
             }
 
             println("should move? $shouldMove")
             if (shouldMove) {
                 // align depending on where did we move
                 when (direction) {
-                    Direction.R, Direction.L -> tailPosition = Pair(tailPosition.first, headPosition.second)
-                    Direction.U, Direction.D -> tailPosition = Pair(headPosition.first, tailPosition.second)
+                    Direction.R, Direction.L -> tail[1] = head[1]
+                    Direction.U, Direction.D -> tail[0] = head[0]
                     else -> {}
                 }
-                println("after alignment $tailPosition")
+                println("after alignment ${tail.contentToString()}")
                 // tail and head on the same col
-                if (headPosition.first == tailPosition.first) {
-                    println("comp in ${abs(headPosition.first - tailPosition.first)}")
-                    while (abs(headPosition.second - tailPosition.second) > 1) {
-                        tailPosition = Pair(
-                            tailPosition.first,
-                            tailPosition.second + direction.yDiff
-                        )
-                        println("tail new pos $tailPosition")
-                        visited.add(tailPosition)
+                if (head[0] == tail[0]) {
+                    while (abs(head[1] - tail[1]) > 1) {
+                        tail[1] = tail[1] + direction.yDiff
+                        println("tail new pos $tail")
+                        visited.add(Pair(tail[0], tail[1]))
                     }
                 }
                 // tail and head on the same row
-                if (headPosition.second == tailPosition.second) {
-                    println("comp in ${abs(headPosition.first - tailPosition.first)}")
-                    while (abs(headPosition.first - tailPosition.first) > 1) {
-                        tailPosition = Pair(
-                            tailPosition.first + direction.xDiff,
-                            tailPosition.second
-                        )
-                        println("tail new pos $tailPosition")
-                        visited.add(tailPosition)
+                if (head[1] == tail[1]) {
+                    while (abs(head[0] - tail[0]) > 1) {
+                        tail[0] = tail[0] + direction.xDiff
+                        println("tail new pos $tail")
+                        visited.add(Pair(tail[0], tail[1]))
                     }
                 }
             }
@@ -79,6 +73,7 @@ fun main() {
 
     val input = readInput("Day07")
     println(part1(input))
+    check(part1(input) == 6256)
     /*
     check(part2(buildTreeGrid(testInput)) == 8)
 
@@ -86,4 +81,5 @@ fun main() {
 
      */
 }
+
 
