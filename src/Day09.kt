@@ -20,7 +20,7 @@ fun main() {
         head[1] = head[1] + direction.yDiff
     }
 
-    fun tailFollow(tail: IntArray, head: IntArray, direction: Direction): Set<Pair<Int, Int>> {
+    fun tailFollow(tail: IntArray, head: IntArray): Set<Pair<Int, Int>> {
         val visited = mutableSetOf<Pair<Int, Int>>()
 
         // shouldn't move if its in the immediate vicinity
@@ -89,9 +89,8 @@ fun main() {
 
             repeat(steps) {
                 moveHead(nodes.last(), direction)
-                //println("Ended in: ${head.contentToString()}, tail at ${tail.contentToString()}")
                 for (i in nodes.size - 2 downTo 0) {
-                    val moves = tailFollow(nodes[i], nodes[i + 1], direction)
+                    val moves = tailFollow(nodes[i], nodes[i + 1])
                     if (i == 0) {
                         visited.addAll(moves)
                     }
