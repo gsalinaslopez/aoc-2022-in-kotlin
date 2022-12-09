@@ -1,4 +1,3 @@
-import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -13,9 +12,6 @@ fun main() {
         sqrt((x2 - x1).toDouble().pow(2) + (y2 - y1).toDouble().pow(2))
 
     fun moveHead(head: IntArray, direction: Direction) {
-        println("======================================")
-        println("$direction")
-
         head[0] = head[0] + direction.xDiff
         head[1] = head[1] + direction.yDiff
     }
@@ -27,55 +23,36 @@ fun main() {
         val shouldMove = Direction.values().all { diff ->
             tail[0] + diff.xDiff != head[0] || tail[1] + diff.yDiff != head[1]
         }
-        println("should move? $shouldMove tail -> ${tail.contentToString()} head -> ${head.contentToString()}")
 
         if (shouldMove) {
-            // tail and head on the same col
             if (head[0] == tail[0]) {
+                // tail and head on the same col
                 if (head[1] > tail[1]) {
                     tail[1]++
                 } else {
                     tail[1]--
                 }
-                /*
-                while (abs(head[1] - tail[1]) > 1) {
-                    tail[1] = tail[1] + direction.yDiff
-                    println("tail new pos 1 ${tail.contentToString()}")
-                }
-                 */
-            }
-            // tail and head on the same row
-            else if (head[1] == tail[1]) {
+            } else if (head[1] == tail[1]) {
+                // tail and head on the same row
                 if (head[0] > tail[0]) {
                     tail[0]++
                 } else {
                     tail[0]--
                 }
-                /*
-                while (abs(head[0] - tail[0]) > 1) {
-                    tail[0] = tail[0] + direction.xDiff
-                    println("tail new pos 2 ${tail.contentToString()}")
-                }
-                 */
-            }
-            // forced to move diagonally
-            else {
-                println("last else")
+            } else {
+                // forced to move diagonally
                 val diagonalPositions = Direction.values().filter {
                     it != Direction.C && it != Direction.R && it != Direction.L && it != Direction.U && it != Direction.D
                 }.map { diff ->
                     intArrayOf(tail[0] + diff.xDiff, tail[1] + diff.yDiff)
                 }.minBy {
-                    //sqrt((head[0] - it[0]).toDouble().pow(2) + (head[1] - it[1]).toDouble().pow(2))
                     distance(it[0], head[0], it[1], head[1])
                 }
                 tail[0] = diagonalPositions[0]
                 tail[1] = diagonalPositions[1]
             }
-            println("tail new pos ${tail.contentToString()}")
             visited.add(Pair(tail[0], tail[1]))
         }
-        println("out of step")
         return visited
     }
 
@@ -96,9 +73,7 @@ fun main() {
                     }
                 }
             }
-            //visited.addAll(tailFollow(tail, head, direction))
         }
-        println(visited)
         return visited.size
     }
     // test if implementation meets criteria from the description, like:
@@ -108,15 +83,8 @@ fun main() {
     check(part1(testInput, 9) == 36)
 
     val input = readInput("Day07")
-    //println(part1(input, 1))
     check(part1(input, 1) == 6256)
     check(part1(input, 9) == 2665)
-    /*
-    check(part2(buildTreeGrid(testInput)) == 8)
-
-    println(part2(buildTreeGrid(input)))
-
-     */
 }
 
 
