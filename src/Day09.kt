@@ -9,12 +9,48 @@ enum class Direction(val xDiff: Int, val yDiff: Int) {
 
 fun main() {
     fun moveHead(head: IntArray, direction: Direction, steps: Int) {
-
         println("======================================")
         println("$direction, $steps")
 
         head[0] = head[0] + (direction.xDiff * steps)
         head[1] = head[1] + (direction.yDiff * steps)
+    }
+
+    fun tailFollow(tail: IntArray, head: IntArray, direction: Direction): Set<Pair<Int, Int>> {
+        val visited = mutableSetOf<Pair<Int, Int>>()
+
+        // shouldn't move if its in the immediate vicinity
+        val shouldMove = Direction.values().all { diff ->
+            tail[0] + diff.xDiff != head[0] || tail[1] + diff.yDiff != head[1]
+        }
+        println("should move? $shouldMove")
+
+        if (shouldMove) {
+            // align depending on where did we move
+            when (direction) {
+                Direction.R, Direction.L -> tail[1] = head[1]
+                Direction.U, Direction.D -> tail[0] = head[0]
+                else -> {}
+            }
+            println("after alignment ${tail.contentToString()}")
+            // tail and head on the same col
+            if (head[0] == tail[0]) {
+                while (abs(head[1] - tail[1]) > 1) {
+                    tail[1] = tail[1] + direction.yDiff
+                    println("tail new pos $tail")
+                    visited.add(Pair(tail[0], tail[1]))
+                }
+            }
+            // tail and head on the same row
+            if (head[1] == tail[1]) {
+                while (abs(head[0] - tail[0]) > 1) {
+                    tail[0] = tail[0] + direction.xDiff
+                    println("tail new pos $tail")
+                    visited.add(Pair(tail[0], tail[1]))
+                }
+            }
+        }
+        return visited
     }
 
     fun part1(input: List<String>): Int {
@@ -25,45 +61,12 @@ fun main() {
         input.map { it.split(" ") }.forEach { entry ->
             val direction = Direction.valueOf(entry[0])
             val steps = entry[1].toInt()
-            moveHead(head, direction, steps)
 
+            moveHead(head, direction, steps)
             println("Ended in: ${head.contentToString()}, tail at ${tail.contentToString()}")
 
-            // shouldn't move if its in the immediate vicinity
-            val shouldMove = Direction.values().all { diff ->
-                //println("${tail[0] + diff.xDiff} != ${head[0]} && ${tail[1] + diff.yDiff} != ${head[1]}")
-                tail[0] + diff.xDiff != head[0] || tail[1] + diff.yDiff != head[1]
-            }
-
-            println("should move? $shouldMove")
-            if (shouldMove) {
-                // align depending on where did we move
-                when (direction) {
-                    Direction.R, Direction.L -> tail[1] = head[1]
-                    Direction.U, Direction.D -> tail[0] = head[0]
-                    else -> {}
-                }
-                println("after alignment ${tail.contentToString()}")
-                // tail and head on the same col
-                if (head[0] == tail[0]) {
-                    while (abs(head[1] - tail[1]) > 1) {
-                        tail[1] = tail[1] + direction.yDiff
-                        println("tail new pos $tail")
-                        visited.add(Pair(tail[0], tail[1]))
-                    }
-                }
-                // tail and head on the same row
-                if (head[1] == tail[1]) {
-                    while (abs(head[0] - tail[0]) > 1) {
-                        tail[0] = tail[0] + direction.xDiff
-                        println("tail new pos $tail")
-                        visited.add(Pair(tail[0], tail[1]))
-                    }
-                }
-            }
+            visited.addAll(tailFollow(tail, head, direction))
         }
-
-        println(visited)
         return visited.size
     }
     // test if implementation meets criteria from the description, like:
