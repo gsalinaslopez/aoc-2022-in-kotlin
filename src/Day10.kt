@@ -3,21 +3,23 @@ fun main() {
         var x = 1
         var acc = 0
         var i = 1
-        input.forEach { instruction ->
+
+        fun updateSprite() {
             if ((i - 1) % 40 == 0) println()
             if ((i - 1) % 40 in x - 1..x + 1) print("#") else print(".")
 
             if ((i - 20) % 40 == 0) acc += (x * i)
+        }
+
+        input.forEach { instruction ->
+            updateSprite()
+
             if (instruction.contains("addx")) {
                 i++
-
-                if ((i - 1) % 40 == 0) println()
-                if ((i - 1) % 40 in x - 1..x + 1) print("#") else print(".")
-
-                if ((i - 20) % 40 == 0) acc += (x * i)
-
+                updateSprite()
                 x += instruction.split(" ")[1].toInt()
             }
+
             i++
         }
         return acc
