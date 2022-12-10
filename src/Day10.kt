@@ -24,10 +24,10 @@ fun main() {
     }
 
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day07_test")
+    val testInput = readInput("Day10_test")
     check(displayCRT(testInput) == 13140)
 
-    val input = readInput("Day07")
+    val input = readInput("Day10")
     displayCRT(input)
 }
 
