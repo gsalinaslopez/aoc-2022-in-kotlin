@@ -3,10 +3,11 @@ data class Monkey(
     val operation: List<String>,
     val test: Int,
     val nextMonkeyRule: Map<Boolean, Int>,
+    var inspectionCount: Int = 0,
 )
 
 fun main() {
-    fun part1(input: List<String>) {
+    fun part1(input: List<String>): Int {
         val monkeys = mutableListOf<Monkey>()
 
         // Init monkeys
@@ -41,15 +42,44 @@ fun main() {
             monkeys.add(monkey)
         }
         println(monkeys)
+        repeat(20) {
+            monkeys.forEach { monkey ->
+                monkey.inspectionCount += monkey.items.size
+
+                monkey.items.map { item ->
+                    val const = if (monkey.operation.last() == "old") item else monkey.operation.last().toInt()
+                    val nextItem =
+                        with(monkey.operation[1]) {
+                            when {
+                                equals("+") -> item + const
+                                equals("*") -> item * const
+                                equals("-") -> item - const
+                                else -> item
+                            }
+                        }
+                    Integer.valueOf(nextItem / 3)
+                }.forEach { item ->
+                    val nextMonkeyIndex =
+                        monkey.nextMonkeyRule[item % monkey.test == 0]!!
+                    monkeys[nextMonkeyIndex].items.add(item)
+                }
+
+                monkey.items.clear()
+            }
+        }
+        println(monkeys)
+        return monkeys.sortedByDescending { it.inspectionCount }.subList(0, 2).fold(1) {acc: Int, monkey: Monkey -> monkey.inspectionCount * acc}
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day11_test")
-    println(part1(testInput))
+    check(part1(testInput) == 10605)
+
+    val input = readInput("Day11")
+    println(part1(input))
     /*
     check(displayCRT(testInput) == 13140)
 
-    val input = readInput("Day10")
     displayCRT(input)
     */
 }
